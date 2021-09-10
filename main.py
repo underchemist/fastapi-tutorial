@@ -1,7 +1,10 @@
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
+from fastapi.security import OAuth2PasswordBearer
 
-app = FastAPI()
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World!"}
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+app = FastAPI(dependencies=[Depends(oauth2_scheme)])
+
+@app.get("/items/")
+async def read_items(token: str):
+    return {"token": token}
